@@ -1,5 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -218,12 +219,18 @@ class Homepage extends React.Component{
     }
 
     componentDidMount(){
-      this.props.fetchRooms()
+      const isAuthenticated  = this.props.isAuthenticated;
+      console.log('isAuth', isAuthenticated)
+      if(isAuthenticated === false){
+            console.log('is not')
+            this.props.history.push('/login/');
+      }
+      
     }
 
     render(){
         const rooms = this.props.rooms;
-        console.log('rooms', rooms)
+        
         return(
             <DashboardContent  />
 
@@ -232,8 +239,10 @@ class Homepage extends React.Component{
 };
 
 const mapStateToProps = state => ({
-  rooms: state.roomReducer.rooms
+  rooms: state.roomReducer.rooms,
+  isAuthenticated: false
 });
 
 
-export default connect(mapStateToProps, {fetchRooms, })(Homepage);
+
+export default compose(withRouter, connect(mapStateToProps, {fetchRooms}))(Homepage);

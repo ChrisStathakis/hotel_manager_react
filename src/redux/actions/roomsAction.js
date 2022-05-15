@@ -10,6 +10,7 @@ export const fetchRooms = (endpoint=ROOMS_ENDPOINT_LIST) => dispatch =>{
         .then(
             respData=>{
                 const rooms = respData.data;
+                console.log('rooms aciotns', rooms)
                 return dispatch({
                     type: FETCH_ROOMS,
                     payload: rooms

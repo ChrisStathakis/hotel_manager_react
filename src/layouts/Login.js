@@ -38,6 +38,9 @@ class LoginView extends React.Component {
     componentDidMount(){
         const {isAuthenticated} = this.props;
         this.setState({isAuthenticated:isAuthenticated})
+        if (isAuthenticated){
+            this.props.history.push('/')
+        }
     }
 
     componentDidUpdate(prevProps){
@@ -54,13 +57,15 @@ class LoginView extends React.Component {
             username: this.state.username,
             password: this.state.password
         };
-
         axiosInstance.post(LOGIN_ENDPOINT, data)
             .then(
                 respData=>{
                     const { status, data} = respData;
                     if (status===200){
                         this.props.loginAction(data)
+                        this.setState({
+                            isAuthenticated: true
+                        })
                     }
                 }
             )
@@ -77,6 +82,7 @@ class LoginView extends React.Component {
     render(){
         const {username, password} = this.state;
         const {isAuthenticated} = this.props;
+        console.log('isAuthenticated', isAuthenticated)
         if(isAuthenticated){this.props.history.push('/')}
 
         return (
@@ -119,10 +125,7 @@ class LoginView extends React.Component {
                                 onChange={this.handleChange}
                                 autoComplete="current-password"
                                 />
-                                <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                                />
+                                
                                 <Button
                                 type="submit"
                                 fullWidth

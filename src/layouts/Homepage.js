@@ -26,6 +26,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { menuItems} from "../components/menu";
 
 import { fetchRooms } from '../redux/actions/roomsAction';
+import RoomCard from '../components/RoomCard';
 import axiosInstance from "../helpers/axiosInstance";
 
 
@@ -92,7 +93,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+function DashboardContent(props) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -193,13 +194,25 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
+                  
                 </Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
+              <RoomCard />
+              <RoomCard />
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                  <RoomCard />
+                  <RoomCard />
                 </Paper>
               </Grid>
+            </Grid>
+            <Grid container spacing={4}>
+              {props.rooms.map((room)=>(
+                <Grid item key={card} sx={12} sm={6} md={4}>
+                  <RoomCard room={room} />
+                  </Grid>
+              ))}
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
@@ -214,7 +227,8 @@ class Homepage extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            tickers: {}
+            tickers: {},
+            rooms: []
         }
     }
 
@@ -225,14 +239,14 @@ class Homepage extends React.Component{
             console.log('is not')
             this.props.history.push('/login/');
       }
-      
+      this.props.fetchRooms()
     }
 
     render(){
-        const rooms = this.props.rooms;
-        
+        const rooms = this.props.rooms ? this.props.rooms: [];
+        console.log('rooms', rooms)
         return(
-            <DashboardContent  />
+            <DashboardContent rooms={rooms.result}  />
 
         )
     }
@@ -240,7 +254,7 @@ class Homepage extends React.Component{
 
 const mapStateToProps = state => ({
   rooms: state.roomReducer.rooms,
-  isAuthenticated: false
+  isAuthenticated: state.authReducer.isAuthenticated
 });
 
 

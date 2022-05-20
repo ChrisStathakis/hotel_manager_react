@@ -7,6 +7,7 @@ export const CURRENT_USER_ENDPOINT = '';
 export const LOGIN_ENDPOINT =  'token/';
 
 export const ROOMS_ENDPOINT_LIST = BASE_URL + 'rooms/rooms/';
+export const ROOM_DETAIL_ENDPOINT = BASE_URL + 'rooms/rooms/detail/';
 
 
 export const COSTUMER_LIST_ENDPOINT = BASE_URL + '';

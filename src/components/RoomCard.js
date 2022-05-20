@@ -22,22 +22,21 @@ export default function RoomCard(props) {
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {props.room.title}
+           Status {props.room.used  ? 'Close' : 'Open'}
           </Typography>
           <Typography variant="h5" component="div">
-            be{bull}nev{bull}o{bull}lent
+            {props.room.title}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            adjective
+            Price {props.room.used}
           </Typography>
           <Typography variant="body2">
-            well meaning and kindly.
+            Capacity: {props.room.capacity} | Extra Cost {props.room.extra_value_per_person}
             <br />
-            {'"a benevolent smile"'}
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn More</Button>
+          <Button size="small">Details</Button>
         </CardActions>
       </Card>
     );

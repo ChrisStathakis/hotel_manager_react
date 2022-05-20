@@ -27,23 +27,14 @@ import { menuItems} from "../components/menu";
 
 import { fetchRooms } from '../redux/actions/roomsAction';
 import RoomCard from '../components/RoomCard';
-import axiosInstance from "../helpers/axiosInstance";
+import RoomView from '../views/RoomView';
+import HomepageComponent from './Components/HomepageComponent';
 
 
 
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
+
 
 const drawerWidth = 240;
 
@@ -93,27 +84,53 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent(props) {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
-  return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
+class Homepage extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.state = {
+            tickers: {},
+            rooms: [],
+            open: true,
+            showRoomPage: false
+        }
+    }
+
+    componentDidMount(){
+      const isAuthenticated  = this.props.isAuthenticated;
+      console.log('isAuth', isAuthenticated)
+      if(isAuthenticated === false){
+            console.log('is not')
+            this.props.history.push('/login/');
+      }
+
+      this.props.fetchRooms()
+    }
+
+    toggleDrawer = () => {
+      this.setState({open: !this.state.open})
+    }
+
+    render(){
+        const rooms = this.props.rooms;
+        const showRoomPage = this.state;
+        
+        return(
+          <ThemeProvider theme={mdTheme}>
+            <Box sx={{ display: 'flex' }}>
+              <CssBaseline />
+              <AppBar position="absolute" open={open}>
+                <Toolbar
+                  sx={{
+                    pr: '24px', // keep right padding when drawer closed
+                  }}
+                >
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              onClick={toggleDrawer}
+              onClick={this.toggleDrawer}
               sx={{
                 marginRight: '36px',
                 ...(open && { display: 'none' }),
@@ -146,7 +163,7 @@ function DashboardContent(props) {
               px: [1],
             }}
           >
-            <IconButton onClick={toggleDrawer}>
+            <IconButton onClick={this.toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
@@ -169,91 +186,29 @@ function DashboardContent(props) {
           }}
         >
           <Toolbar />
+          {showRoomPage ? <RoomView /> : <HomepageComponent rooms={rooms} />}
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-              <RoomCard />
-              <RoomCard />
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <RoomCard />
-                  <RoomCard />
-                </Paper>
-              </Grid>
-            </Grid>
+            
             <Grid container spacing={4}>
-              {props.rooms.map((room)=>(
-                <Grid item key={card} sx={12} sm={6} md={4}>
+              {rooms ? rooms.map((room)=>(
+                <Grid item key={room} sx={12} sm={6} md={4}>
                   <RoomCard room={room} />
-                  </Grid>
-              ))}
+                </Grid> 
+              )): null}
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
+           
           </Container>
         </Box>
       </Box>
     </ThemeProvider>
-  );
-};
-
-class Homepage extends React.Component{
-
-    constructor(props){
-        super(props);
-        this.state = {
-            tickers: {},
-            rooms: []
-        }
-    }
-
-    componentDidMount(){
-      const isAuthenticated  = this.props.isAuthenticated;
-      console.log('isAuth', isAuthenticated)
-      if(isAuthenticated === false){
-            console.log('is not')
-            this.props.history.push('/login/');
-      }
-      this.props.fetchRooms()
-    }
-
-    render(){
-        const rooms = this.props.rooms ? this.props.rooms: [];
-        console.log('rooms', rooms)
-        return(
-            <DashboardContent rooms={rooms.result}  />
+          
 
         )
     }
 };
 
 const mapStateToProps = state => ({
-  rooms: state.roomReducer.rooms,
+  rooms: state.roomReducers.rooms,
   isAuthenticated: state.authReducer.isAuthenticated
 });
 

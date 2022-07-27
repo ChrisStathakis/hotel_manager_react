@@ -4,11 +4,9 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
@@ -17,72 +15,18 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { menuItems} from "../components/menu";
-
+import { fetchCostumers } from '../redux/actions/customersActions';
 import { fetchRooms } from '../redux/actions/roomsAction';
 import RoomCard from '../components/RoomCard';
 import RoomView from '../views/RoomView';
 import HomepageComponent from './Components/HomepageComponent';
 
-
-
-
-
-
-
-const drawerWidth = 240;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
-
-const mdTheme = createTheme();
+import { Drawer, mdTheme, AppBar} from "../helpers/basicTemplate";
 
 
 class Homepage extends React.Component{
@@ -98,24 +42,39 @@ class Homepage extends React.Component{
     }
 
     componentDidMount(){
+      this.setState({
+        showRoomPage: this.props.showRoom
+      });
       const isAuthenticated  = this.props.isAuthenticated;
-      console.log('isAuth', isAuthenticated)
+      console.log('isAuth', isAuthenticated);
       if(isAuthenticated === false){
-            console.log('is not')
+            console.log('is not');
             this.props.history.push('/login/');
       }
 
       this.props.fetchRooms()
+      this.props.fetchCostumers()
     }
 
     toggleDrawer = () => {
       this.setState({open: !this.state.open})
     }
 
+    componentDidUpdate(prevProps, prevState){
+      console.log('updated?', this.state.showRoomPage)
+      if (prevProps.showRoom !== this.state.showRoomPage){
+        console.log('updated')
+        this.setState({
+          showRoomPage: this.props.showRoom
+        })
+      }
+    }
+    
+
     render(){
-        const rooms = this.props.rooms;
+        const {rooms, showRoom} = this.props;
         const showRoomPage = this.state;
-        
+        console.log('show room', showRoom)
         return(
           <ThemeProvider theme={mdTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -209,9 +168,10 @@ class Homepage extends React.Component{
 
 const mapStateToProps = state => ({
   rooms: state.roomReducers.rooms,
-  isAuthenticated: state.authReducer.isAuthenticated
+  isAuthenticated: state.authReducer.isAuthenticated,
+  showRoom: state.genericReducer.showRoom
 });
 
 
 
-export default compose(withRouter, connect(mapStateToProps, {fetchRooms}))(Homepage);
+export default compose(withRouter, connect(mapStateToProps, {fetchRooms, fetchCostumers}))(Homepage);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Link} from "react-router-dom";
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,13 +18,25 @@ export const menuItems = (
             <ListItemIcon>
                 <DashboardIcon/>
             </ListItemIcon>
-            <ListItemText primary="Dashboard"/>
+            <Link to="/"> <ListItemText primary='Dashboard'/> </Link>
         </ListItemButton>
         <ListItemButton>
             <ListItemIcon>
                 <PeopleIcon/>
             </ListItemIcon>
-            <ListItemText primary='Tickers'/>
+            <Link to="/rooms/"> <ListItemText primary='Rooms'/> </Link>
+        </ListItemButton>
+        <ListItemButton>
+            <ListItemIcon>
+                <PeopleIcon/>
+            </ListItemIcon>
+            <Link to="/reservations/"> <ListItemText primary='Reservations'/> </Link>
+        </ListItemButton>
+        <ListItemButton>
+            <ListItemIcon>
+                <PeopleIcon/>
+            </ListItemIcon>
+            <Link to="/calendar/"> <ListItemText primary='Calendar'/> </Link>
         </ListItemButton>
     </React.Fragment>
-)
+);

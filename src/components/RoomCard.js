@@ -1,4 +1,6 @@
-import * as React from 'react';
+import React from 'react';
+import { fetchRoom } from '../redux/actions/roomsAction';
+import { showRoomAction } from '../redux/actions/genericActions';
 import {
     Box,
     Card,
@@ -7,6 +9,7 @@ import {
     Button,
     Typography
 } from '@mui/material';
+import { connect } from 'react-redux';
 
 const bull = (
     <Box
@@ -17,27 +20,51 @@ const bull = (
     </Box>
   );
 
-export default function RoomCard(props) {
+
+class RoomCard extends React.Component{
+
+  constructor(props){
+    super(props);
+
+  }
+
+  handleClick = () =>{
+    this.props.fetchRoom(this.props.room.id)
+    this.props.showRoomAction(true)
+  }
+
+  render(){
+    const {room} = this.props;
     return (
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-           Status {props.room.used  ? 'Close' : 'Open'}
+           Status {room.used  ? 'Close' : 'Open'}
           </Typography>
           <Typography variant="h5" component="div">
-            {props.room.title}
+            {room.title}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            Price {props.room.used}
+            Price {room.used}
           </Typography>
           <Typography variant="body2">
-            Capacity: {props.room.capacity} | Extra Cost {props.room.extra_value_per_person}
+            Capacity: {room.capacity} | Extra Cost {room.extra_value_per_person}
             <br />
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Details</Button>
+          <Button onClick={this.handleClick} size="small">Details</Button>
         </CardActions>
       </Card>
     );
   }
+}
+
+
+
+const mapStateToProps = state =>({
+
+})
+
+
+export default connect(mapStateToProps, {fetchRoom, showRoomAction})(RoomCard);

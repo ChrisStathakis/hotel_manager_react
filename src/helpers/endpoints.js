@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://127.0.0.1:8000/api/';
+export const BASE_URL = 'https://test-hotel-manager.herokuapp.com/';
 
 export const REFRESH_TOKEN_ENDPOINT = '';
 export const TICKER_LIST_ENDPOINT = BASE_URL + 'ticker/list/';

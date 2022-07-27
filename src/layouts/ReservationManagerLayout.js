@@ -53,7 +53,7 @@ class ReservationManagerLayout extends React.Component {
     }
 
     loadData(){
-        const endpoint = 'http://127.0.0.1:8000/api/reservations/list/?customer=&room=&isDone=false&isCancel=false';
+        const endpoint = 'https://test-hotel-manager.herokuapp.com/api/reservations/list/?customer=&room=&isDone=false&isCancel=false';
         const myThis = this;
         axiosInstance.get(endpoint)
             .then(

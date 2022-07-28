@@ -2,6 +2,10 @@
   "name": "simply-chris-react",
   "version": "0.1.0",
   "private": true,
+  "engines": { 
+    "npm": "6.x",
+    "node": "16.x" 
+  },
   "dependencies": {
     "@date-io/date-fns": "^2.14.0",
     "@date-io/dayjs": "^2.14.0",
